@@ -37,11 +37,10 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-compiler:$arch_version"
     //data binding
     kapt "androidx.databinding:compiler:3.2.0-alpha11"
-    //retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    //room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
     //Rx
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
