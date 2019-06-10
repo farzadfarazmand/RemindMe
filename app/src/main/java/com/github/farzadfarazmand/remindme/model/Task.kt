@@ -10,7 +10,7 @@ data class Task(
     @ColumnInfo(name = "task_title")
     val title: String = "",
     @ColumnInfo(name = "task_bg_color")
-    val colorCode: String = "#eeeeee",
+    val colorCode: Int = 0,
     @ColumnInfo(name = "task_timestamp")
     val timestamp: Long = 0
 )
