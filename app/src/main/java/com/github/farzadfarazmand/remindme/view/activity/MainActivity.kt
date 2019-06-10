@@ -22,7 +22,6 @@ import com.github.farzadfarazmand.remindme.view.adapter.TaskRecyclerListAdapter
 import com.github.farzadfarazmand.remindme.viewmodel.MainViewModel
 import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.dialog_new_task.view.*
 
 class MainActivity : AppCompatActivity() {

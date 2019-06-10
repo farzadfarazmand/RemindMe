@@ -15,7 +15,7 @@ interface TaskDao {
     @Update(onConflict = OnConflictStrategy.IGNORE)
     fun update(task: Task): Completable
 
-    @Query("SELECT * FROM task_table ORDER BY task_timestamp ASC")
+    @Query("SELECT * FROM task_table ORDER BY task_timestamp DESC")
     fun getAllTasks(): Flowable<List<Task>>
 
 }

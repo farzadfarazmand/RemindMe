@@ -1,10 +1,10 @@
 package com.github.farzadfarazmand.remindme.view.adapter
 
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.github.farzadfarazmand.remindme.R
 import com.github.farzadfarazmand.remindme.view.activity.MainActivity
@@ -40,8 +40,7 @@ class ColorListAdapter(
 
         fun bindViews(color: Int, position: Int, colorChangeListener: MainActivity.TaskBackgroundColorChangeListener) {
             //set color
-            val bgShape = colorShape.background as GradientDrawable
-            bgShape.setColor(color)
+            DrawableCompat.setTint(DrawableCompat.wrap(colorShape.background), color)
 
             if (position == checkedPosition) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
