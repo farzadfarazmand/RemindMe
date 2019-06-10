@@ -1,8 +1,12 @@
 package com.github.farzadfarazmand.remindme.model
 
+import androidx.cardview.widget.CardView
+import androidx.databinding.BindingAdapter
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.orhanobut.logger.Logger
+
 
 @Entity(tableName = "task_table")
 data class Task(

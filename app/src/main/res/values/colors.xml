@@ -14,7 +14,6 @@
     <color name="card_bg_8">#DCE775</color>
     <color name="card_bg_9">#FFD54F</color>
     <color name="card_bg_10">#FF8A65</color>
-    <color name="card_bg_11">#90A4AE</color>
 
     <integer-array name="card_bg_color_array">
         <item>@color/card_bg_1</item>
@@ -27,7 +26,6 @@
         <item>@color/card_bg_8</item>
         <item>@color/card_bg_9</item>
         <item>@color/card_bg_10</item>
-        <item>@color/card_bg_11</item>
     </integer-array>
 
 </resources>
