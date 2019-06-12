@@ -11,11 +11,15 @@ class TaskRepository(application: Application) {
 
     private val taskDao: TaskDao = DatabaseHelper.getInstance(application).taskDao()
 
-    fun getTaskList(): Flowable<List<Task>> {
+    fun getTaskList(): Flowable<MutableList<Task>> {
         return taskDao.getAllTasks()
     }
 
     fun insertTask(task: Task): Completable {
+        return taskDao.insert(task)
+    }
+
+    fun deleteTask(task: Task): Completable {
         return taskDao.insert(task)
     }
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,7 +15,7 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.github.farzadfarazmand.remindme.R
 import com.github.farzadfarazmand.remindme.databinding.ActivityMainBinding
 import com.github.farzadfarazmand.remindme.model.Task
-import com.github.farzadfarazmand.remindme.status.TaskStatus
+import com.github.farzadfarazmand.remindme.utils.ListHolder
 import com.github.farzadfarazmand.remindme.view.adapter.ColorListAdapter
 import com.github.farzadfarazmand.remindme.view.adapter.TaskRecyclerListAdapter
 import com.github.farzadfarazmand.remindme.viewmodel.MainViewModel
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        val taskListAdapter = TaskRecyclerListAdapter(arrayListOf())
+        val taskListAdapter = TaskRecyclerListAdapter(viewModel.taskListHolder)
         tasksRecyclerView.adapter = taskListAdapter
 
         viewModel.getAllTasks()
@@ -62,27 +61,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.taskList.observe(this,
-            Observer<List<Task>> { tasks ->
-                tasks?.let { taskListAdapter.addItems(it) }
+        viewModel.taskListHolder.observe(this,
+            Observer<ListHolder<Task>> { tasksListHolder ->
+                tasksListHolder?.let { tasksListHolder.applyChange(taskListAdapter as RecyclerView.Adapter<RecyclerView.ViewHolder>) }
             })
 
-        viewModel.newTask.observe(this,
-            Observer<Task> { task ->
-                task?.let { taskListAdapter.addItem(task) }
-            })
-
-        viewModel.getStatus().observe(this, Observer<TaskStatus> { taskStatus ->
-            when (taskStatus) {
-                TaskStatus.INSERT_SUCCESS -> Toast.makeText(this, "Task inserted!", Toast.LENGTH_SHORT).show()
-                TaskStatus.INSERT_ERROR -> Toast.makeText(this, "Task not inserted :(", Toast.LENGTH_SHORT).show()
-                TaskStatus.GET_ALL_ERROR -> Toast.makeText(this, "Cant get all task :(", Toast.LENGTH_SHORT).show()
-                else -> {
-                    //do nothing
-                }
-            }
-
-        })
+//        viewModel.getStatus().observe(this, Observer<TaskStatus> { taskStatus ->
+//            when (taskStatus) {
+//                TaskStatus.INSERT_SUCCESS -> Toast.makeText(this, "Task inserted!", Toast.LENGTH_SHORT).show()
+//                TaskStatus.INSERT_ERROR -> Toast.makeText(this, "Task not inserted :(", Toast.LENGTH_SHORT).show()
+//                TaskStatus.GET_ALL_ERROR -> Toast.makeText(this, "Cant get all task :(", Toast.LENGTH_SHORT).show()
+//                TaskStatus.DELETE_SUCCESS -> Toast.makeText(this, "Cant get all task :(", Toast.LENGTH_SHORT).show()
+//                else -> {
+//                    //do nothing
+//                }
+//            }
+//
+//        })
     }
 
     private fun initColorsList(colorsList: RecyclerView) {
