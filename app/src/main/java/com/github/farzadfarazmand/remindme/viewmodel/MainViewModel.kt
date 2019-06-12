@@ -2,17 +2,15 @@ package com.github.farzadfarazmand.remindme.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import com.github.farzadfarazmand.remindme.model.Task
 import com.github.farzadfarazmand.remindme.repository.TaskRepository
-import com.github.farzadfarazmand.remindme.status.TaskStatus
 import com.github.farzadfarazmand.remindme.utils.ListLiveData
 import com.orhanobut.logger.Logger
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableCompletableObserver
+import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subscribers.DisposableSubscriber
 
 class MainViewModel(context: Application) : AndroidViewModel(context) {
 
@@ -22,22 +20,24 @@ class MainViewModel(context: Application) : AndroidViewModel(context) {
     var taskListHolder = ListLiveData<Task>()
 
     fun getAllTasks() {
+        Logger.d("MainViewModel, getAll Task called")
         compositeDisposable.add(
             taskRepository.getTaskList()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSubscriber<MutableList<Task>>() {
+                .subscribeWith(object : DisposableObserver<MutableList<Task>>() {
                     override fun onComplete() {
-                        Logger.d("MainViewModel, onComplete")
+                        Logger.d("getAll Task, onComplete")
                     }
 
                     override fun onNext(t: MutableList<Task>) {
+                        Logger.d("getAll Task, On next")
                         taskListHolder.addItems(t)
+                        dispose() //because each time table change , it called onNext
                     }
 
                     override fun onError(e: Throwable) {
-                        Logger.e("MainViewModel, error => %s", e.message)
-
+                        Logger.e("getAll Task, error => %s", e.message)
                     }
                 })
         )
@@ -52,6 +52,7 @@ class MainViewModel(context: Application) : AndroidViewModel(context) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableCompletableObserver() {
                     override fun onComplete() {
+                        Logger.d("MainViewModel, insert Task On next")
                         taskListHolder.addItem(task, 0)
 
                     }
@@ -64,22 +65,23 @@ class MainViewModel(context: Application) : AndroidViewModel(context) {
         )
     }
 
-    fun deleteTask(task: Task, index:Int) {
-        compositeDisposable.add(
-            taskRepository.deleteTask(task)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableCompletableObserver() {
-                    override fun onComplete() {
-                        taskListHolder.removeItemAt(index)
-                    }
+    fun deleteTask(index:Int) {
+        taskListHolder[index]?.let {
+            compositeDisposable.add(
+                taskRepository.deleteTask(it)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(object : DisposableCompletableObserver() {
+                        override fun onComplete() {
+                            taskListHolder.removeItemAt(index)
+                        }
 
-                    override fun onError(e: Throwable) {
-                        Logger.e("MainViewModel, delete error => %s", e.message)
-                    }
-                })
-        )
-
+                        override fun onError(e: Throwable) {
+                            Logger.e("MainViewModel, delete error => %s", e.message)
+                        }
+                    })
+            )
+        }
     }
 
     override fun onCleared() {

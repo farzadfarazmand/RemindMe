@@ -3,6 +3,7 @@ package com.github.farzadfarazmand.remindme.utils
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.github.farzadfarazmand.remindme.model.Task
+import com.orhanobut.logger.Logger
 
 class ListLiveData<T> : LiveData<ListHolder<T>>() {
 
@@ -76,17 +77,20 @@ data class ListHolder<T>(private val list: MutableList<T> = mutableListOf()) {
     }
 
     fun addItems(items: MutableList<T>) {
+        Logger.i("listHolder ADD_ALL called")
         list.addAll(items)
         updateType = UpdateType.ADD_ALL
     }
 
     fun addItem(position: Int, item: T) {
+        Logger.i("listHolder INSERT called")
         list.add(position, item)
         indexChanged = position
         updateType = UpdateType.INSERT
     }
 
     fun removeItemAt(position: Int) {
+        Logger.i("listHolder REMOVE called")
         val item = list[position]
         list.remove(item)
         indexChanged = position
@@ -94,6 +98,7 @@ data class ListHolder<T>(private val list: MutableList<T> = mutableListOf()) {
     }
 
     fun setItem(position: Int, item: T) {
+        Logger.i("listHolder SET called")
         list[position] = item
         indexChanged = position
         updateType = UpdateType.CHANGE

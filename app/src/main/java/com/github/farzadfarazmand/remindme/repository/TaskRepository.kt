@@ -6,12 +6,13 @@ import com.github.farzadfarazmand.remindme.dao.TaskDao
 import com.github.farzadfarazmand.remindme.model.Task
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Observable
 
 class TaskRepository(application: Application) {
 
     private val taskDao: TaskDao = DatabaseHelper.getInstance(application).taskDao()
 
-    fun getTaskList(): Flowable<MutableList<Task>> {
+    fun getTaskList(): Observable<MutableList<Task>> {
         return taskDao.getAllTasks()
     }
 
@@ -20,7 +21,7 @@ class TaskRepository(application: Application) {
     }
 
     fun deleteTask(task: Task): Completable {
-        return taskDao.insert(task)
+        return taskDao.delete(task)
     }
 
 }

@@ -23,9 +23,18 @@ import com.orhanobut.logger.Logger
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_new_task.view.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), TaskRecyclerListAdapter.RecyclerViewActionsListener {
+
+    override fun onItemClicked(position: Int) {
+        Toast.makeText(this, "position $position clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onItemRemoved(position: Int) {
+        viewModel.deleteTask(position)
+    }
 
     private var selectedColor = 0
+    private lateinit var viewModel: MainViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,11 +43,11 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding.viewModel = viewModel
         binding.executePendingBindings()
 
-        val taskListAdapter = TaskRecyclerListAdapter(viewModel.taskListHolder)
+        val taskListAdapter = TaskRecyclerListAdapter(viewModel.taskListHolder, this)
         tasksRecyclerView.adapter = taskListAdapter
 
         viewModel.getAllTasks()
